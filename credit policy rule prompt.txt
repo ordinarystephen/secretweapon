@@ -1,0 +1,133 @@
+You are helping me convert a bank credit policy into a structured, reviewable knowledge base for an internal AI tool.
+
+Your task is to extract the policy into atomic rules. Do not summarize broadly. Do not invent requirements. Do not infer unstated policy. Each rule must be traceable to specific source text from the policy.
+
+Important objective:
+The output will be reviewed by a human and then passed to a coding agent to implement policy checks, exception flags, documentation checks, and retrieval citations in an AI tool.
+
+Extract the following categories when present:
+1. Definitions
+2. Scope and applicability
+3. Eligibility rules
+4. Prohibitions
+5. Quantitative thresholds
+6. Calculation rules
+7. Required approvals
+8. Required documentation
+9. Monitoring or review requirements
+10. Escalation requirements
+11. Exception processes
+12. Timing or frequency requirements
+13. Data requirements
+14. Qualitative standards that require human judgment
+
+For each rule, produce one JSON object with the following fields:
+
+- rule_id: Create a stable ID using the policy abbreviation and sequence number.
+- policy_name: Name of the policy.
+- policy_version: Version or effective date if available. If not available, use "unknown".
+- source_reference:
+  - document_name
+  - section
+  - page
+  - quote: Include the shortest exact quote that supports the rule.
+- rule_type: One of:
+  - definition
+  - scope
+  - eligibility
+  - prohibition
+  - threshold
+  - calculation
+  - approval_requirement
+  - documentation_requirement
+  - monitoring_requirement
+  - exception_process
+  - escalation_requirement
+  - timing_requirement
+  - review_frequency
+  - data_requirement
+  - qualitative_standard
+- business_domain: The relevant credit area, portfolio, product, or process.
+- applies_to: Object describing the product, borrower, transaction type, region, legal entity, portfolio, or other applicability details.
+- trigger: The event or condition that causes the rule to apply.
+- requirement: Plain-English statement of the rule.
+- condition_logic: Structured representation of the rule logic where possible. Use fields, operators, values, and units. If the rule is qualitative, use null.
+- expected_action: What the AI tool should do when the rule is triggered.
+- severity: One of:
+  - hard_stop
+  - exception_required
+  - soft_warning
+  - guidance
+  - definition_only
+- evidence_required: List of documents, data fields, approvals, or artifacts needed to verify compliance.
+- exceptions: List any permitted exceptions, required approvals, and conditions for exception handling.
+- ambiguities_or_review_flags: List anything that requires human or policy-owner review.
+- implementation_notes: Explain what data or extraction logic the coding agent would need.
+- test_cases: Provide at least one positive and one negative test case when the rule can be tested.
+- human_review_status: Set to "pending_review".
+
+Rules:
+- Keep each rule atomic. If one paragraph contains three requirements, create three rule objects.
+- Preserve thresholds, dates, frequencies, approval roles, exception language, and defined terms exactly.
+- Distinguish "must", "should", "may", "generally", and "unless approved" language.
+- Do not convert guidance into hard-stop rules unless the policy clearly requires it.
+- If source text is ambiguous, create a rule but flag the ambiguity.
+- If a rule depends on another definition, reference that definition in implementation_notes.
+- If the policy contains examples, convert them into test cases only if they clearly illustrate a rule.
+- If the policy contains tables, extract each row as a separate rule when the rows impose separate requirements.
+- If a rule cannot be implemented deterministically, classify it as qualitative_standard or guidance and explain what human judgment is needed.
+- Do not omit exception language.
+- Do not omit applicability limitations.
+- Do not omit source references.
+
+Output format:
+Return valid JSON only. Do not include Markdown commentary. Use this top-level structure:
+
+{
+  "policy_metadata": {
+    "policy_name": "",
+    "document_name": "",
+    "policy_version": "",
+    "effective_date": "",
+    "owner": "",
+    "extraction_date": "",
+    "extraction_limitations": []
+  },
+  "rules": [
+    {
+      "rule_id": "",
+      "policy_name": "",
+      "policy_version": "",
+      "source_reference": {
+        "document_name": "",
+        "section": "",
+        "page": "",
+        "quote": ""
+      },
+      "rule_type": "",
+      "business_domain": "",
+      "applies_to": {},
+      "trigger": "",
+      "requirement": "",
+      "condition_logic": null,
+      "expected_action": "",
+      "severity": "",
+      "evidence_required": [],
+      "exceptions": [],
+      "ambiguities_or_review_flags": [],
+      "implementation_notes": "",
+      "test_cases": [],
+      "human_review_status": "pending_review"
+    }
+  ],
+  "definitions": [],
+  "unresolved_questions_for_policy_owner": [],
+  "sections_not_extracted": [],
+  "quality_control_summary": {
+    "number_of_rules_extracted": 0,
+    "number_of_rules_with_ambiguity": 0,
+    "number_of_threshold_rules": 0,
+    "number_of_exception_rules": 0,
+    "overall_completeness_assessment": ""
+  }
+}
