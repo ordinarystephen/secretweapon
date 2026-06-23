@@ -1,0 +1,22 @@
+Review the extracted policy-rule JSON for completeness and implementation readiness.
+
+Compare the extracted rules against the source policy. Identify:
+1. Any policy sections not represented in the JSON.
+2. Any paragraphs that contain multiple requirements but were collapsed into one rule.
+3. Any missing thresholds, dates, approval roles, documentation requirements, exception language, or applicability limits.
+4. Any rules incorrectly classified as hard_stop, exception_required, soft_warning, guidance, or definition_only.
+5. Any rules that are too vague for a coding agent to implement.
+6. Any rules that need human policy-owner interpretation.
+7. Any missing test cases.
+8. Any source references that are too broad or unsupported.
+
+Return:
+- corrected_rules_json
+- missing_rules_to_add
+- rules_to_split
+- rules_to_reclassify
+- unresolved_questions_for_policy_owner
+- implementation_risks
+- final_reviewer_checklist
+
+Do not invent policy. Use only the source document.
